@@ -12,3 +12,16 @@ Accept: application/json
   "lastName": "Veronika",
   "email": "jessicav@email.com"
 }
+
+###
+PUT http://0.0.0.0:8090/customer/A0003
+Content-Type: application/json
+
+{
+  "firstName": "Jessica",
+  "lastName": "Veronika",
+  "email": "jveronika@email.com"
+}
+
+###
+DELETE http://0.0.0.0:8090/customer/A0001

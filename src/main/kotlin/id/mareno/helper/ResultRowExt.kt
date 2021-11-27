@@ -2,6 +2,7 @@ package id.mareno.helper
 
 import id.mareno.data.entity.Customer
 import id.mareno.data.model.CustomerResponse
+import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
 
 fun ResultRow.toCustomerResponse(): CustomerResponse {
@@ -11,4 +12,8 @@ fun ResultRow.toCustomerResponse(): CustomerResponse {
         lastName = this[Customer.lastName],
         email = this[Customer.email]
     )
+}
+
+fun Query.isNotExist(): Boolean {
+    return singleOrNull() == null
 }

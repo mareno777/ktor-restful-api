@@ -2,6 +2,7 @@ package id.mareno.data
 
 import id.mareno.data.model.CreateCustomerRequest
 import id.mareno.data.model.CustomerResponse
+import id.mareno.data.model.UpdateCustomerRequest
 
 interface CustomerRepository {
 
@@ -11,7 +12,7 @@ interface CustomerRepository {
 
     suspend fun insert(createCustomerRequest: CreateCustomerRequest): CustomerResponse
 
-    suspend fun update(id: String): CustomerResponse
+    suspend fun update(id: String, updateCustomerRequest: UpdateCustomerRequest): CustomerResponse
 
-    suspend fun delete(id: String): CustomerResponse
+    suspend fun delete(id: String)
 }

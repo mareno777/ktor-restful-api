@@ -2,6 +2,7 @@ package id.mareno.routes
 
 import id.mareno.data.CustomerRepository
 import id.mareno.data.model.CreateCustomerRequest
+import id.mareno.data.model.UpdateCustomerRequest
 import id.mareno.data.model.WebResponse
 import io.ktor.application.*
 import io.ktor.http.*
@@ -62,8 +63,41 @@ fun Route.customerRouting() {
             )
             call.respond(HttpStatusCode.Created, webResponse)
         }
+
+        put("{id}") {
+            val updateCustomerRequest = call.receive<UpdateCustomerRequest>()
+            val response = customerRepository.update(
+                id = call.parameters["id"]!!,
+                updateCustomerRequest = updateCustomerRequest
+            )
+            val httpStatusCode = HttpStatusCode.OK
+            val webResponse = WebResponse(
+                code = httpStatusCode.value,
+                status = httpStatusCode.description,
+                data = "Successfully updated"
+            )
+            call.respond(httpStatusCode, webResponse)
+        }
         delete("{id}") {
-            //
+            val idParameter = call.parameters["id"]
+            if (idParameter != null) {
+                customerRepository.delete(idParameter)
+                val httpStatusCode = HttpStatusCode.OK
+                val webResponse = WebResponse(
+                    code = httpStatusCode.value,
+                    status = httpStatusCode.description,
+                    data = "Successfully deleted"
+                )
+                call.respond(httpStatusCode, webResponse)
+            } else {
+                val httpStatusCode = HttpStatusCode.NotFound
+                val webResponse = WebResponse(
+                    code = httpStatusCode.value,
+                    status = httpStatusCode.description,
+                    data = "Customer not found"
+                )
+                call.respond(httpStatusCode, webResponse)
+            }
         }
     }
 }

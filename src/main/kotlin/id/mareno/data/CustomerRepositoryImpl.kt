@@ -3,12 +3,12 @@ package id.mareno.data
 import id.mareno.data.entity.Customer
 import id.mareno.data.model.CreateCustomerRequest
 import id.mareno.data.model.CustomerResponse
+import id.mareno.data.model.UpdateCustomerRequest
+import id.mareno.helper.isNotExist
 import id.mareno.helper.toCustomerResponse
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 
 class CustomerRepositoryImpl(private val database: Database) : CustomerRepository {
@@ -24,13 +24,18 @@ class CustomerRepositoryImpl(private val database: Database) : CustomerRepositor
 
     override suspend fun getCustomer(id: String): CustomerResponse? {
         val launchResult = suspendedTransactionAsync(Dispatchers.IO, database) {
-            Customer.select { Customer.id eq id }.singleOrNull()?.toCustomerResponse()
+            val query = Customer.select { Customer.id eq id }
+            if (query.isNotExist()) {
+                null
+            } else {
+                query.single().toCustomerResponse()
+            }
         }
         return launchResult.await()
     }
 
     override suspend fun insert(createCustomerRequest: CreateCustomerRequest): CustomerResponse {
-        suspendedTransactionAsync {
+        newSuspendedTransaction(Dispatchers.IO) {
             Customer.insert {
                 createCustomerRequest.also { customer ->
                     it[id] = customer.id
@@ -39,7 +44,7 @@ class CustomerRepositoryImpl(private val database: Database) : CustomerRepositor
                     it[email] = customer.email
                 }
             }
-        }.join()
+        }
         return CustomerResponse(
             id = createCustomerRequest.id,
             firstName = createCustomerRequest.firstName,
@@ -48,11 +53,35 @@ class CustomerRepositoryImpl(private val database: Database) : CustomerRepositor
         )
     }
 
-    override suspend fun update(id: String): CustomerResponse {
-        TODO("Not yet implemented")
+    override suspend fun update(id: String, updateCustomerRequest: UpdateCustomerRequest): CustomerResponse {
+        newSuspendedTransaction(Dispatchers.IO) {
+            if (Customer.select { Customer.id eq id }.isNotExist()) {
+                throw NoSuchElementException("Data doesn't exist")
+            }
+            Customer.update({ Customer.id eq id }) {
+                updateCustomerRequest.also { customer ->
+                    it[firstName] = customer.firstName
+                    it[lastName] = customer.lastName
+                    it[email] = customer.email
+                }
+            }
+        }
+        return CustomerResponse(
+            id = id,
+            firstName = updateCustomerRequest.firstName,
+            lastName = updateCustomerRequest.lastName,
+            email = updateCustomerRequest.email,
+        )
     }
 
-    override suspend fun delete(id: String): CustomerResponse {
-        TODO("Not yet implemented")
+    override suspend fun delete(id: String) {
+        newSuspendedTransaction(Dispatchers.IO) {
+            if (Customer.select { Customer.id eq id }.isNotExist()) {
+                throw NoSuchElementException("Data doesn't exist")
+            }
+            Customer.deleteWhere {
+                Customer.id eq id
+            }
+        }
     }
 }
