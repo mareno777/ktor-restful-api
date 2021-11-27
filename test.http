@@ -1,0 +1,14 @@
+GET http://0.0.0.0:8090/customer
+Accept: application/json
+
+###
+POST http://0.0.0.0:8090/customer
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "A0003",
+  "firstName": "Jessica",
+  "lastName": "Veronika",
+  "email": "jessicav@email.com"
+}
