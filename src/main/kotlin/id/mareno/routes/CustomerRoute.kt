@@ -63,7 +63,7 @@ fun Route.customerRouting() {
             call.respond(HttpStatusCode.Created, webResponse)
         }
         delete("{id}") {
-
+            //
         }
     }
 }
