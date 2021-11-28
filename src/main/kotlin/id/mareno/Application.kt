@@ -18,7 +18,6 @@ fun Application.module() {
     install(Koin) {
         modules(mainModule)
     }
-
     configureRouting()
     configureMonitoring()
     configureSerialization()

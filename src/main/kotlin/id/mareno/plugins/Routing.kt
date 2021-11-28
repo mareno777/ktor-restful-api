@@ -44,6 +44,16 @@ fun Application.configureRouting() {
                     )
                 )
             }
+            exception<IllegalArgumentException> { cause ->
+                val httpStatusCode = HttpStatusCode.Unauthorized
+                call.respond(
+                    httpStatusCode, WebResponse(
+                        code = httpStatusCode.value,
+                        status = httpStatusCode.description,
+                        data = cause.message
+                    )
+                )
+            }
         }
     }
 }

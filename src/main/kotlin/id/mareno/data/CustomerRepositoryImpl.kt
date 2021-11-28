@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionA
 class CustomerRepositoryImpl(private val database: Database) : CustomerRepository {
 
     override suspend fun getAllCustomers(): List<CustomerResponse> {
-        val launchResult = suspendedTransactionAsync(Dispatchers.IO, database) {
+        val launchResult = suspendedTransactionAsync(Dispatchers.IO) {
             Customer.selectAll().map { resultRow ->
                 resultRow.toCustomerResponse()
             }
@@ -23,7 +23,7 @@ class CustomerRepositoryImpl(private val database: Database) : CustomerRepositor
     }
 
     override suspend fun getCustomer(id: String): CustomerResponse? {
-        val launchResult = suspendedTransactionAsync(Dispatchers.IO, database) {
+        val launchResult = suspendedTransactionAsync(Dispatchers.IO) {
             val query = Customer.select { Customer.id eq id }
             if (query.isNotExist()) {
                 null

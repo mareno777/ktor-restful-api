@@ -16,6 +16,10 @@ fun Route.customerRouting() {
 
     route("/customer") {
         get {
+//                val userAgent = call.request.userAgent()
+//                if (userAgent != "mareno") {
+//                    throw IllegalArgumentException("you're using unsupported browser")
+//                }
             val response = customerRepository.getAllCustomers()
             if (response.isNotEmpty()) {
                 val webResponse = WebResponse(

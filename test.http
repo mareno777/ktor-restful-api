@@ -1,4 +1,4 @@
-GET http://0.0.0.0:8090/customer
+GET http://0.0.0.0:8090/customer/a
 Accept: application/json
 
 ###
@@ -7,10 +7,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": "A0003",
-  "firstName": "Jessica",
-  "lastName": "Veronika",
-  "email": "jessicav@email.com"
+  "id": "A0006",
+  "firstName": "Joe",
+  "lastName": "Wesley",
+  "email": "joewesley67@email.com"
 }
 
 ###
@@ -20,8 +20,8 @@ Content-Type: application/json
 {
   "firstName": "Jessica",
   "lastName": "Veronika",
-  "email": "jveronika@email.com"
+  "email": "j_veronika@email.com"
 }
 
 ###
-DELETE http://0.0.0.0:8090/customer/A0001
+DELETE http://0.0.0.0:8090/customer/A0006
