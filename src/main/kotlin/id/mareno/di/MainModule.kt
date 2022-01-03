@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.Database
 import org.koin.dsl.module
 
 val mainModule = module {
-    single<CustomerRepository> { CustomerRepositoryImpl(get()) }
     single {
         Database.connect(
             url = "jdbc:mysql://localhost:3306/ktor_restful_api",
@@ -14,5 +13,5 @@ val mainModule = module {
             user = "root", password = "root"
         )
     }
-
+    single<CustomerRepository> { CustomerRepositoryImpl(get()) }
 }

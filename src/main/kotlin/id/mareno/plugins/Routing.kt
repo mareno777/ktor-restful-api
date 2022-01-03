@@ -12,6 +12,12 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 fun Application.configureRouting() {
     routing {
+
+        route("/") {
+            get {
+                call.respondRedirect("https://injilkeselamatan.com/")
+            }
+        }
         customerRouting()
         // Static plugin. Try to access `/static/index.html`
         static("/static") {

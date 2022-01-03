@@ -90,7 +90,7 @@ fun Route.customerRouting() {
                 val webResponse = WebResponse(
                     code = httpStatusCode.value,
                     status = httpStatusCode.description,
-                    data = "Successfully deleted"
+                    data = "Customer has been deleted"
                 )
                 call.respond(httpStatusCode, webResponse)
             } else {
